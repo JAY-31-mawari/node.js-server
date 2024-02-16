@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        .container{
+            height:90vh;
+            width:100%;
+            display: grid;
+            place-items: center;       
+        }
+        .form-container{
+            padding:30px 10px;
+            width:30%;
+            border-radius: 10px;
+            background-color: rgb(94, 185, 228);
+        }
+        .form-styling{
+            padding-top: 14px;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            margin:1rem;
+            font-size:20px;
+        }
+        label{
+            
+            padding-bottom: 10px;
+            font-size: 28px;
+        }
+        input{
+            width:90%;
+            font-size:28px;
+            padding:10px;
+            border-radius: 10px;
+            font-weight: 100;
+        }
+        h1{
+            font-family: Arial, Helvetica, sans-serif;
+            margin:10px;
+        }
+        button{
+            margin:10px 20px;
+            background-color: rgb(187, 247, 91);
+            border: none;
+            padding:10px;
+            font-size: 28px;
+            border-radius: 10px;
+        }
+        button:hover{
+            background-color:rgb(231, 35, 205);
+            transition:.4s;
+        }
+        select{
+            font-size: 27px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <form class="form-elements">
+                <h1>SignUp</h1>
+                <div class="form-styling">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" placeholder="Enter Full Name">
+                </div>
+                <div class="form-styling">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" placeholder="abc@email.com">
+                </div>
+                <div class="form-styling">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" placeholder="Enter Password">
+                </div>
+                <div class="form-styling">
+                    <label for="type">Enter your Type</label>
+                    <select>
+                        <option value="signup">Signup</option>
+                        <option value="login">Login</option>
+                    </select>    
+                </div>
+                <button type="button" onclick="sendvalue()">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        let inputs=document.querySelectorAll('input')
+        let select=document.querySelector('select')
+        select.addEventListener('click',function(e){
+            if(select.value==='login')
+            {
+                document.getElementById('email').disabled=true
+            }
+            else{
+                document.getElementById('email').disabled=false
+            }
+        })
+        let data={}
+        function sendvalue(){
+            inputs.forEach(function(input){
+                data[input.name]=input.value  
+                input.value=''  
+            })
+            data.name=data.name.toLowerCase()
+            data['type']=select.value
+
+            fetch("http://localhost:4000/api/v1/",{
+                method:'POST',
+                headers:{
+                    'Content-type':'application/json'
+            },
+            body:JSON.stringify(data),
+            }).then((response)=>{
+            return response.json()
+            }).then((data)=>{
+            console.log(data)
+            if(data.success === true)
+            {
+                setTimeout(()=>{
+                    location.href='/'
+                },1000)
+            }
+        })
+    }
+    </script>
+</body>
+</html>
